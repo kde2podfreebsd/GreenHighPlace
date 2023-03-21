@@ -2,50 +2,27 @@
 
 ## Check Telegram Bot - https://t.me/GreenHighPlaceBot
 
-### 1. Struct of project | [Miro design](https://miro.com/welcomeonboard/MHZNUUZ4T0pGUGJLbm5RZ2xVZE5MSGw3T0NGZThYUExRcUdIcnlBeUh0N2lVaXdxM3pvZGhEWlZOZHVwRHRiZXwzMDc0NDU3MzU0NzgyMTA3MTY5fDI=?share_link_id=2729402969)
-```
-.
-├── app
-│   ├── attachments
-│   │   └── saverEmptyDirectory
-│   ├── bot
-│   │   ├── bot.py
-│   │   ├── __init__.py
-│   │   ├── markups.py
-│   │   └── tools.py
-│   ├── config
-│   │   ├── config.py
-│   │   └── __init__.py
-│   ├── files
-│   │   └── saverEmptyDirectory
-│   ├── __init__.py
-│   ├── migrations
-│   │   ├── alembic.ini
-│   │   ├── env.py
-│   │   ├── README
-│   │   ├── script.py.mako
-│   │   └── versions
-│   │       └── 7de62e106479_.py
-│   ├── models
-│   │   ├── ActiveOrderModel.py
-│   │   ├── AdminModel.py
-│   │   ├── CartModel.py
-│   │   ├── CompleteOrderModel.py
-│   │   ├── CustomerModel.py
-│   │   ├── __init__.py
-│   │   ├── NewProductModel.py
-│   │   ├── postModel.py
-│   │   ├── ProductModel.py
-│   │   └── RefusalOrderModel.py
-│   ├── utils
-│   │   ├── databaseResponseModel.py
-│   │   └── __init__.py
-│   └── wsgi.py
-├── config.ini
-├── docker-compose-devdb.yaml
-├── README.md
-└── requirements.txt
-```
+## Description: 
+2-roles telegram shop bot for online orders.
+roles: User, Admin
+
+User Functionality:
+* Language change
+* Change of address + comment to the address (+ automatic sending of geo-location via the telegram widget
+* My orders (list of orders + all order information)
+* Shopping cart + Order
+* Write to the administrator on the current order via the bot
+
+Admin Functionality:
+* Orders (Active\Cancelled\Completed) + Change of order statuses (Transferred to the courier/Cancel the order)
+* Receiving notification of new orders
+* Write to the user on the current order
+* Post promotion (send a post to all bot users)
+* Product catalog (creating a new product + editing old ones)
+* Language change
+* Log out of the admin panel
+
+### 1. [Miro design](https://miro.com/welcomeonboard/MHZNUUZ4T0pGUGJLbm5RZ2xVZE5MSGw3T0NGZThYUExRcUdIcnlBeUh0N2lVaXdxM3pvZGhEWlZOZHVwRHRiZXwzMDc0NDU3MzU0NzgyMTA3MTY5fDI=?share_link_id=2729402969)
 
 ### 2. Prepair and Start project
 #### 2.1 .env file
