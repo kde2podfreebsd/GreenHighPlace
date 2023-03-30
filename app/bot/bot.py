@@ -15,13 +15,9 @@ from tools import get_address
 import markups as mk
 import pytz
 
-
-
-
 import pathlib
 
 config = load_dotenv()
-
 
 adminPostSaleChecker = dict()
 adminAddProductChecker = dict()
@@ -1373,7 +1369,7 @@ def toWriteInfoAboutChangingProductRU(message, idProduct):
 
         lengthOfCaption = len(message.text)
 
-        if lengthOfCaption <= 400:
+        if lengthOfCaption <= 900:
             pm.changeInfoAboutRU(idProduct, message.text)
             product = pm.getProduct(idProduct)
 
@@ -1408,7 +1404,7 @@ def toWriteInfoAboutChangingProductEN(message, idProduct):
 
         lengthOfCaption = len(message.text)
 
-        if lengthOfCaption <= 400:
+        if lengthOfCaption <= 900:
             pm.changeInfoAboutEN(idProduct, message.text)
             product = pm.getProduct(idProduct)
             if product.typeMedia == "video":

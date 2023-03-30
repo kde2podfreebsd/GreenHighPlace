@@ -1,9 +1,17 @@
+import os
+
 from telebot import types
 from telegram_bot_pagination import InlineKeyboardPaginator
+from dotenv import load_dotenv
+
 from app.models import ProductModel as pm
 from app.models import CustomerModel as db
 from app.models import ActiveOrderModel as ao
+
+config = load_dotenv()
 hideMenu = types.ReplyKeyboardRemove()
+
+password = os.getenv('BotAdminPassword')
 
 # до меню профиль-купить
 
@@ -28,14 +36,16 @@ switchLanguage.add(languageEN, languageRU)
 
 def welcomeText(language: str):
     if language == "RU":
-        return '''Привет!
-Ты в крутом магазине на крутом острове
-Можешь сделать заказ и оформить доставку'''
+        return '''👋 Приветствую тебя в нашем телеграм боте от Green High Shop! 🌿🌿🌿
+🌿 У нас ты найдешь только лучшее качество за адекватные деньги и другие интересные товары.
+Чтобы мы могли точно определить адрес для доставки, не забудь отправить нам свою геолокацию 📍 или написать свой адрес вручную 📝
+Мы всегда рады помочь и ответить на любые вопросы! 💬'''
 
     if language == "EN":
-        return '''Hello!
-You are in the cool boshkiShop on cool Island
-You can make an order and do delivery'''
+        return '''👋 Welcome to our telegram bot from Green High Shop! 🌿🌿🌿
+🌿 We have only the best quality for adequate money and other interesting products.
+So we can pinpoint the exact address for delivery, don't forget to send us your geolocation 📍 or write your address manually 📝
+We're always happy to help and answer any questions! 💬'''
 
 
 def askLocation(language: str):
@@ -131,6 +141,8 @@ toShopRU = types.InlineKeyboardButton("В магазин 🛍", callback_data="t
 toShopEN = types.InlineKeyboardButton("To shop 🛍", callback_data="toShop")
 toProfileRU = types.InlineKeyboardButton("В профиль 👤", callback_data="backToProfile")
 toProfileEN = types.InlineKeyboardButton("To profile 👤", callback_data="backToProfile")
+
+
 def toShop(language: str):
     toShop = types.InlineKeyboardMarkup(row_width=1)
 
@@ -269,7 +281,7 @@ class sliderProductPaginator(InlineKeyboardPaginator):
 def textProduct(name, infoAbout, price, language):
     if language == "RU":
         return f'''{name}
-        
+
 {infoAbout.split("#")[0]}
 
 Доставка по всему острову
@@ -277,7 +289,7 @@ def textProduct(name, infoAbout, price, language):
 
     elif language == "EN":
         return f'''{name}
-        
+
 {infoAbout.split('#')[1]}
 
 Delivery on the whole Island
@@ -551,7 +563,8 @@ def infoOrderText(products: list, fullsum: int, address: str, comment: str, paym
 
             head += "\n*Итого:* {} BATH".format(fullsum)
             head += "\n\n*Адрес:* {}" \
-                    "\n\n*Комментарий к адресу:* {}\n\n".format(address, comment if comment is not None else "не указан")
+                    "\n\n*Комментарий к адресу:* {}\n\n".format(address,
+                                                                comment if comment is not None else "не указан")
 
             if payment == "forCash":
                 head += "*Метод оплаты:* наличные"
@@ -581,7 +594,7 @@ def infoOrderText(products: list, fullsum: int, address: str, comment: str, paym
             head += "\n*Total:* {} BATH".format(fullsum)
             head += "\n\n*Address:* {}" \
                     "\n\n*Comment for address:* {}\n\n".format(address,
-                                                             comment if comment is not None else "didn't point")
+                                                               comment if comment is not None else "didn't point")
 
             if payment == "forCash":
                 head += "*Payment:* cash"
@@ -624,12 +637,14 @@ def confirmedOrderMenu(numberOfOrder: int, language: str):
     confirmedOrderMenu = types.InlineKeyboardMarkup(row_width=1)
 
     if language == "RU":
-        toCurrentOrder = types.InlineKeyboardButton("К заказу 🛍", callback_data="toCurrentOrder#{}".format(numberOfOrder))
+        toCurrentOrder = types.InlineKeyboardButton("К заказу 🛍",
+                                                    callback_data="toCurrentOrder#{}".format(numberOfOrder))
         toBack = types.InlineKeyboardButton("Назад ⬅️", callback_data="backToProfile")
         return confirmedOrderMenu.add(toCurrentOrder, toBack)
 
     if language == "EN":
-        toCurrentOrder = types.InlineKeyboardButton("To order 🛍", callback_data="toCurrentOrder#{}".format(numberOfOrder))
+        toCurrentOrder = types.InlineKeyboardButton("To order 🛍",
+                                                    callback_data="toCurrentOrder#{}".format(numberOfOrder))
         toBack = types.InlineKeyboardButton("Back ⬅️", callback_data="backToProfile")
         return confirmedOrderMenu.add(toCurrentOrder, toBack)
 
@@ -781,10 +796,8 @@ def showActiveOrderText(activeOrders: list, choosedOrder: int, language: str):
 def showActiveOrderMenu(activeOrders: list, choosedOrder: int, language: str):
     showActiveOrderMenu = types.InlineKeyboardMarkup(row_width=1)
 
-
     activeOrders.reverse()
     idActive = activeOrders[choosedOrder].id
-
 
     if language == "RU":
         # добавить id ордера в колбэк дату
@@ -964,13 +977,14 @@ def deletedItemText(name, language):
 
 toAdminTextRU = "Администрирование"
 toAdminTextEN = "Administration"
-password = "123"
+
 
 def toEnterPasswordText(language):
     if language == "RU":
         return "Введите пароль доступа"
     if language == "EN":
         return "Enter password"
+
 
 def passwordCorrectText(language):
     if language == "RU":
@@ -985,11 +999,13 @@ def passwordUncorrectText(language):
     if language == "EN":
         return "Access denied"
 
+
 def helloBoss(language):
     if language == "RU":
         return "Привет, Босс!"
     if language == "EN":
         return "Hello, Boss!"
+
 
 def helloMenu(language):
     bossMenu = types.InlineKeyboardMarkup(row_width=1)
@@ -1002,13 +1018,15 @@ def helloMenu(language):
         exitAdmin = types.InlineKeyboardButton("Выйти из админ панели", callback_data="exitAdmin")
         return bossMenu.add(orders, postSale, catalog, lang, exitAdmin)
 
-    if language =="EN":
+    if language == "EN":
         orders = types.InlineKeyboardButton("Orders", callback_data="adminOrders")
         postSale = types.InlineKeyboardButton("Post news", callback_data="adminPostSale")
         catalog = types.InlineKeyboardButton("Catalog", callback_data="adminCatalog")
         lang = types.InlineKeyboardButton("Switch language", callback_data="adminSwitchLanguage")
         exitAdmin = types.InlineKeyboardButton("Exit admin", callback_data="exitAdmin")
         return bossMenu.add(orders, postSale, catalog, lang, exitAdmin)
+
+
 def mainAdmin(language):
     adminMainMenu = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     if language == "RU":
@@ -1018,9 +1036,11 @@ def mainAdmin(language):
         adminMainButton = types.KeyboardButton("Main menu")
         return adminMainMenu.add(adminMainButton)
 
+
 def chooseListOrdersText(language):
     if language == "RU": return "Выбери список заказов"
     if language == "EN": return "Choose list of orders"
+
 
 def chooseListOrdersMenu(language):
     chooseListOrdersMenu = types.InlineKeyboardMarkup(row_width=1)
@@ -1036,6 +1056,7 @@ def chooseListOrdersMenu(language):
         listComplete = types.InlineKeyboardButton("Completed", callback_data="completeList")
         toBack = types.InlineKeyboardButton("Back ⬅️", callback_data="toMainAdmin")
         return chooseListOrdersMenu.add(listActive, listRefusal, listComplete, toBack)
+
 
 class adminSliderOrderPaginator(InlineKeyboardPaginator):
     first_page_label = '<<'
@@ -1058,8 +1079,6 @@ def AdminTextOrderActive(active, language):
 
 
 def adminSliderOrderActive(page, active, language):
-
-
     if len(active) != 0:
 
         paginator = adminSliderOrderPaginator(
@@ -1074,7 +1093,7 @@ def adminSliderOrderActive(page, active, language):
                                                                               str(active[page - 1].fullprice)),
                                                      callback_data="adminLookActive#{}".format(page - 1))
         paginator.add_before(adminLookActive)
-        toBackButton =""
+        toBackButton = ""
         if language == "RU":
             toBackButton = types.InlineKeyboardButton('Назад ⬅️', callback_data='adminOrders')
         if language == "EN":
@@ -1094,9 +1113,7 @@ def adminSliderOrderActive(page, active, language):
         return backingMenu.add(backingButton)
 
 
-
 def adminActiveInfoText(activeOrders: list, choosedOrder: int, language):
-
     order = activeOrders[choosedOrder]
     customer = db.getCustomer(order.customer_id)
     if language == "RU":
@@ -1157,6 +1174,7 @@ def adminActiveInfoText(activeOrders: list, choosedOrder: int, language):
             head += "\n\nStatus order: waiting for courier"
         return head
 
+
 def adminActiveInfoMenu(activeOrders: list, choosedOrder: int, language):
     order = activeOrders[choosedOrder]
     activeMenu = types.InlineKeyboardMarkup(row_width=1)
@@ -1176,14 +1194,14 @@ def adminActiveInfoMenu(activeOrders: list, choosedOrder: int, language):
 
         if order.status == "ожидает курьера":
             activeMenu.add(types.InlineKeyboardButton("Обновить статус-принять к доставке",
-                                             callback_data=f"acceptingActive#{order.id}#{choosedOrder}"))
+                                                      callback_data=f"acceptingActive#{order.id}#{choosedOrder}"))
 
         activeMenu.add(button3, button4, button5)
 
         return activeMenu
     if language == "EN":
         button1 = types.InlineKeyboardButton("Write to customer",
-                                           callback_data=f"messageToCustomer#{order.customer_id}#{order.id}#{choosedOrder}")
+                                             callback_data=f"messageToCustomer#{order.customer_id}#{order.id}#{choosedOrder}")
 
         button3 = types.InlineKeyboardButton("Cancel order",
                                              callback_data=f"refusingActive#{order.id}#{choosedOrder}")
@@ -1201,32 +1219,44 @@ def adminActiveInfoMenu(activeOrders: list, choosedOrder: int, language):
 
         activeMenu.add(button3, button4, button5)
         return activeMenu
+
+
 def switchStatusText(language):
     if language == "RU":
         return "Статус заказа успешно обновлен\nПокупатель получил уведомление"
     if language == "EN":
         return "Order status updated successfully\nCustomer received notification"
+
+
 def switchActiveToCompleteText(id: int, language):
     if language == "RU":
         return f"Заказ №{id} успешно завершен"
     if language == "EN":
         return f"Order №{id} completed successfully"
 
+
 def switchActiveToCompleteMenu(language):
     if language == "RU":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Назад ⬅️", callback_data="activeList"))
     if language == "EN":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Back ⬅️", callback_data="activeList"))
+
+
 def switchActiveToRefusalText(languageAdmin, languageCustomer):
     if languageAdmin == "RU":
         return f"Введите причину отмены или вернитесь назад!\nРекомендуется использовать язык: {languageCustomer}"
     if languageAdmin == "EN":
         return f"Enter a reason for canceling or go back!\nRecommended to use the language: {languageCustomer}"
+
+
 def switchActiveToRefusalMenu(page: int, language):
     if language == "RU":
-        return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Назад ⬅️", callback_data=f"activeToRefusalCancel#{page}"))
+        return types.InlineKeyboardMarkup().add(
+            types.InlineKeyboardButton("Назад ⬅️", callback_data=f"activeToRefusalCancel#{page}"))
     if language == "EN":
-        return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Back ⬅️", callback_data=f"activeToRefusalCancel#{page}"))
+        return types.InlineKeyboardMarkup().add(
+            types.InlineKeyboardButton("Back ⬅️", callback_data=f"activeToRefusalCancel#{page}"))
+
 
 def infoActiveToRefusalText(id: int, language):
     if language == "RU":
@@ -1234,11 +1264,13 @@ def infoActiveToRefusalText(id: int, language):
     if language == "EN":
         return f"Order №{id} canceled successfully\nCustomer received notification"
 
+
 def infoActiveToRefusalMenu(language):
     if language == "RU":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Назад ⬅️", callback_data="activeList"))
     if language == "EN":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Back ⬅️", callback_data="activeList"))
+
 
 def toCommunicateWithCustomerText(id: int, language):
     if language == "RU":
@@ -1247,53 +1279,71 @@ def toCommunicateWithCustomerText(id: int, language):
     if language == "EN":
         return f"Write a message to the buyer\non order №{id}\n" \
                f"Recommended to use the language: {db.getLanguage(ao.getActiveOrder(id).customer_id)}"
+
+
 def toCommunicateWithCustomerMenu(page: int, language):
     if language == "RU":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Назад ⬅️",
-                                                                       callback_data=f"adminCommunicateCancel#{page}"))
+                                                                           callback_data=f"adminCommunicateCancel#{page}"))
     if language == "EN":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Back ⬅️",
-                                                                       callback_data=f"adminCommunicateCancel#{page}"))
+                                                                           callback_data=f"adminCommunicateCancel#{page}"))
+
 
 def answerNextSendToCustomerText(idOrder: int, language):
     if language == "RU":
         return f'Сообщение покупателю по заказу №{idOrder} успешно отправлено'
     if language == "EN":
         return f'Message to the buyer on order №{idOrder} successfully sent'
+
+
 def answerNextSendToCustomerMenu(page: int, language):
     if language == "RU":
-        return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Назад ⬅️", callback_data=f"adminLookActive#{page}"))
+        return types.InlineKeyboardMarkup().add(
+            types.InlineKeyboardButton("Назад ⬅️", callback_data=f"adminLookActive#{page}"))
     if language == "EN":
-        return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Back ⬅️", callback_data=f"adminLookActive#{page}"))
+        return types.InlineKeyboardMarkup().add(
+            types.InlineKeyboardButton("Back ⬅️", callback_data=f"adminLookActive#{page}"))
+
 
 def sendingToCustomerText(idOrder, text, language):
     if language == "RU":
         return f"Вам сообщение от продавца по заказу №{idOrder}:\n" + text
     if language == "EN":
         return f'You get message from seller on order №{idOrder}:\n' + text
+
+
 def sendingToCustomerMenu(idOrder, idAdmin, language):
     if language == "RU":
-        return types.InlineKeyboardMarkup().\
+        return types.InlineKeyboardMarkup(). \
             add(types.InlineKeyboardButton("Ответить", callback_data=f"toAnswerToAdmin#{idAdmin}#{idOrder}"))
     if language == "EN":
         return types.InlineKeyboardMarkup(). \
             add(types.InlineKeyboardButton("To answer", callback_data=f"toAnswerToAdmin#{idAdmin}#{idOrder}"))
+
 
 def toAnswerToAdminText(language):
     if language == "RU":
         return 'Напиши сообщение:'
     if language == "EN":
         return 'Write a message:'
+
+
 def toAnswerToAdminMenu(language):
     if language == "RU":
-        return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Отменить ❌", callback_data="answerToAdminCancel"))
+        return types.InlineKeyboardMarkup().add(
+            types.InlineKeyboardButton("Отменить ❌", callback_data="answerToAdminCancel"))
     if language == "EN":
-        return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Cancel ❌", callback_data="answerToAdminCancel"))
+        return types.InlineKeyboardMarkup().add(
+            types.InlineKeyboardButton("Cancel ❌", callback_data="answerToAdminCancel"))
+
+
 def feedbackToCustomerAfterSendAdminText(language):
     if language == "RU":
         return "Сообщение успешно отправлено"
     if language == "EN":
         return "Message has sent successfully"
+
 
 def sendingToAdminText(idOrder, text, language):
     if language == "RU":
@@ -1304,11 +1354,12 @@ def sendingToAdminText(idOrder, text, language):
 
 def sendingToAdminMenu(idOrder, idCustomer, language):
     if language == "RU":
-        return types.InlineKeyboardMarkup().\
+        return types.InlineKeyboardMarkup(). \
             add(types.InlineKeyboardButton("Ответить", callback_data=f"messageToCustomer#{idCustomer}#{idOrder}"))
     if language == "EN":
         return types.InlineKeyboardMarkup(). \
             add(types.InlineKeyboardButton("Answer", callback_data=f"messageToCustomer#{idCustomer}#{idOrder}"))
+
 
 def toAnswerToCustomerMenu(page: int, language):
     if language == "RU":
@@ -1317,6 +1368,8 @@ def toAnswerToCustomerMenu(page: int, language):
     if language == "EN":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("View his order",
                                                                            callback_data=f"adminCommunicateCancel#{page}"))
+
+
 def AdminTextOrderRefusal(active, language):
     if len(active) != 0:
         if language == "RU":
@@ -1328,8 +1381,9 @@ def AdminTextOrderRefusal(active, language):
             return 'Отменённых заказов нет ;('
         if language == "EN":
             return 'No canceled orders'
-def adminSliderOrderRefusal(page, refusal, language):
 
+
+def adminSliderOrderRefusal(page, refusal, language):
     if len(refusal) != 0:
 
         paginator = adminSliderOrderPaginator(
@@ -1366,7 +1420,6 @@ def adminSliderOrderRefusal(page, refusal, language):
 
 
 def adminRefusalInfoText(refusalOrders: list, choosedOrder: int, language):
-
     order = refusalOrders[choosedOrder]
 
     customer = db.getCustomer(order.customer_id)
@@ -1422,6 +1475,7 @@ def adminRefusalInfoText(refusalOrders: list, choosedOrder: int, language):
         head += f"\n\nReason of canceling: {order.reason}"
         return head
 
+
 def adminRefusalInfoMenu(language):
     if language == "RU":
         return types.InlineKeyboardMarkup(row_width=1).add(
@@ -1429,6 +1483,7 @@ def adminRefusalInfoMenu(language):
     if language == "EN":
         return types.InlineKeyboardMarkup(row_width=1).add(
             types.InlineKeyboardButton("Back ⬅️", callback_data="refusalList"))
+
 
 def AdminTextOrderComplete(complete: list, language):
     if len(complete) != 0:
@@ -1441,8 +1496,9 @@ def AdminTextOrderComplete(complete: list, language):
             return 'Завершенных заказов нет!'
         if language == "EN":
             return 'No completed orders!'
-def adminSliderOrderComplete(page, complete, language):
 
+
+def adminSliderOrderComplete(page, complete, language):
     if len(complete) != 0:
 
         paginator = adminSliderOrderPaginator(
@@ -1477,7 +1533,6 @@ def adminSliderOrderComplete(page, complete, language):
 
 
 def adminCompleteInfoText(completeOrders: list, choosedOrder: int, language):
-
     order = completeOrders[choosedOrder]
 
     customer = db.getCustomer(order.customer_id)
@@ -1530,35 +1585,47 @@ def adminCompleteInfoText(completeOrders: list, choosedOrder: int, language):
         head += f"\n\nComment for address: " \
                 f"{order.comment if order.comment is not None else 'did not point'}"
         return head
+
+
 def adminCompleteInfoMenu(language):
     if language == "RU":
-        return types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton("Назад", callback_data="completeList"))
+        return types.InlineKeyboardMarkup(row_width=1).add(
+            types.InlineKeyboardButton("Назад", callback_data="completeList"))
     if language == "EN":
-        return types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton("Back", callback_data="completeList"))
+        return types.InlineKeyboardMarkup(row_width=1).add(
+            types.InlineKeyboardButton("Back", callback_data="completeList"))
+
 
 def showNewActiveOrderText(idOrder, language):
     if language == "RU":
         return f'Поступил новый заказ №{idOrder}'
     if language == "EN":
         return f'New order №{idOrder}'
+
+
 def showNewActiveOrderMenu(page: int, language):
     if language == "RU":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Посмотреть заказ",
-                                                                       callback_data=f"adminCommunicateCancel#{page}"))
+                                                                           callback_data=f"adminCommunicateCancel#{page}"))
     if language == "EN":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("View order",
                                                                            callback_data=f"adminCommunicateCancel#{page}"))
+
+
 def infoReason(idOrder, text, language):
     if language == "RU":
         return f"Продавец отменил заказ №{idOrder}\nПричина: {text}"
     elif language == "EN":
         return f'Seller has refused order №{idOrder}\nReason: {text}'
+
+
 def infoAccept(idOrder, language):
     if language == "RU":
         return f'Заказ №{idOrder} принят в доставку'
 
     elif language == "EN":
         return f'Order №{idOrder} was sent for delivery'
+
 
 def infoAcceptWithTime(order, language):
     print(order.status)
@@ -1568,11 +1635,13 @@ def infoAcceptWithTime(order, language):
     elif language == "EN":
         return f'Order №{order.id} was sent for delivery\nEstimated delivery time: {order.status.split("#")[1]}'
 
+
 def adminBeforePostTextRU(language):
     if language == "RU":
         return "Введите текст поста на русском языке (до 450 символов):"
     if language == "EN":
         return "Enter the text of the post in Russian (up to 450 characters):"
+
 
 def adminBeforePostTextEN(language):
     if language == "RU":
@@ -1580,17 +1649,20 @@ def adminBeforePostTextEN(language):
     if language == "EN":
         return "Enter the text of the post in English (up to 450 characters):"
 
+
 def warningPostText(language, length):
     if language == "RU":
         return f"Максимальная длина сообщения 450 символов: вы ввели {length}"
     if language == "EN":
         return f"Maximum message length is 450 characters: you entered {length}"
 
+
 def warningProductText(language, length):
     if language == "RU":
         return f"Максимальная длина описания 900 символов: вы ввели {length}"
     if language == "EN":
         return f"Maximum description length is 900 characters: you entered {length}"
+
 
 def warningPostMenuRU(language):
     if language == "RU":
@@ -1603,6 +1675,8 @@ def warningPostMenuRU(language):
             types.InlineKeyboardButton("Try again", callback_data="wrongLengthPost#RU"),
             types.InlineKeyboardButton("Reset", callback_data="resetPost")
         )
+
+
 def warningPostMenuEN(language):
     if language == "RU":
         return types.InlineKeyboardMarkup(row_width=1).add(
@@ -1614,11 +1688,15 @@ def warningPostMenuEN(language):
             types.InlineKeyboardButton("Try again", callback_data="wrongLengthPost#EN"),
             types.InlineKeyboardButton("Reset", callback_data="resetPost")
         )
+
+
 def adminBeforePostMenu(language):
     if language == "RU":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Сбросить", callback_data="resetPost"))
     if language == "EN":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Reset", callback_data="resetPost"))
+
+
 def adminGetTypePostText(textRU, textEN, language):
     if language == "RU":
         return f"Текст для русских пользователей:\n{textRU}" \
@@ -1626,6 +1704,8 @@ def adminGetTypePostText(textRU, textEN, language):
     if language == "EN":
         return f"Text for russian customers:\n{textRU}" \
                f"\n\nText for english customer:\n{textEN}\n\nChoose an attachment for a post"
+
+
 def adminGetTypePostMenu(language):
     menu = types.InlineKeyboardMarkup(row_width=1)
     if language == "RU":
@@ -1640,22 +1720,28 @@ def adminGetTypePostMenu(language):
         b3 = types.InlineKeyboardButton("No attachment", callback_data=f"noAttach")
         b4 = types.InlineKeyboardButton("Reset", callback_data="resetPost")
         return menu.add(b1, b2, b3, b4)
+
+
 def adminPostToAttachPhoto(language):
     if language == "RU":
         return 'Прикрепите и отправьте фото:'
     if language == "EN":
         return 'Attach and send a photo:'
 
+
 def adminPostToAttachVideo(language):
     if language == "RU":
         return f'Прикрепите видео в формате mp4:'
     if language == "EN":
         return f'Attach video in mp4 format:'
+
+
 def adminFinalPostText(textRU, textEN, language):
     if language == "RU":
         return f"Текст для русских пользователей:\n{textRU}\n\nТекст на англоязычных пользователей:\n{textEN}"
     if language == "EN":
         return f"Text for russian customers:\n{textRU}\n\nText for english customers:\n{textEN}"
+
 
 def adminFinalPostMenu(language):
     if language == "RU":
@@ -1669,6 +1755,7 @@ def adminFinalPostMenu(language):
             types.InlineKeyboardButton("Reset", callback_data="resetPost")
         )
 
+
 def adminListProductText(products, language):
     if len(products) != 0:
         if language == "RU":
@@ -1681,6 +1768,7 @@ def adminListProductText(products, language):
         if language == "EN":
             return "No items in the shop"
 
+
 def adminSliderShop(page, products, language):
     if len(products) != 0:
 
@@ -1692,20 +1780,28 @@ def adminSliderShop(page, products, language):
 
         lookProduct = types.InlineKeyboardButton('{}'.format(nameOfProducts[page - 1]),
                                                  callback_data='adminProductName#{}'.format(idOrders[page - 1]))
-        paginator.add_before(lookProduct)
-
 
         if language == "RU":
             toAddProduct = types.InlineKeyboardButton('Добавить товар', callback_data='adminAddProduct')
+            toDeleteProduct = types.InlineKeyboardButton(
+                'Удалить товар', callback_data=f'adminDeleteProduct#{idOrders[page - 1]}'
+            )
 
             toBackButton = types.InlineKeyboardButton('Назад', callback_data='toMainAdmin')
-            paginator.add_after(toBackButton, toAddProduct)
+            paginator.add_after(toBackButton, toDeleteProduct)
+            paginator.add_before(toAddProduct)
 
         if language == "EN":
             toAddProduct = types.InlineKeyboardButton('Add item', callback_data='adminAddProduct')
 
+            toDeleteProduct = types.InlineKeyboardButton(
+                'Delete item', callback_data=f'adminDeleteProduct#{idOrders[page - 1]}'
+            )
             toBackButton = types.InlineKeyboardButton('Back', callback_data='toMainAdmin')
-            paginator.add_after(toBackButton, toAddProduct)
+            paginator.add_after(toBackButton, toDeleteProduct)
+            paginator.add_before(toAddProduct)
+
+        paginator.add_before(lookProduct)
 
         return paginator.markup
 
@@ -1726,7 +1822,7 @@ def adminTextProduct(product, language, pageOfLanguage):
     if language == "RU":
         if pageOfLanguage == 1:
             return f'''ВЗГЛЯДОМ RU ПОЛЬЗОВАТЕЛЯ:\n
-        
+
 {product.name}
 
 {product.infoAbout.split('#')[0]}
@@ -1747,7 +1843,7 @@ Delivery on the whole Island
     if language == "EN":
         if pageOfLanguage == 1:
             return f'''RU USER'S VIEW:\n
-        
+
 {product.name}
 
 {product.infoAbout.split('#')[0]}
@@ -1764,6 +1860,7 @@ Delivery on the whole Island
 
 Delivery on the whole Island
 1 gram - {product.price} BATH'''
+
 
 def adminProductMenu1(idOrder, language):
     if language == "RU":
@@ -1788,6 +1885,8 @@ def adminProductMenu1(idOrder, language):
             types.InlineKeyboardButton("Delete item", callback_data=f"adminDeleteProduct#{idOrder}"),
             types.InlineKeyboardButton("Back", callback_data="adminCatalogFromMedia")
         )
+
+
 def adminProductMenu2(idOrder, language):
     if language == "RU":
         return types.InlineKeyboardMarkup(row_width=1).add(
@@ -1811,11 +1910,15 @@ def adminProductMenu2(idOrder, language):
             types.InlineKeyboardButton("Delete item", callback_data=f"adminDeleteProduct#{idOrder}"),
             types.InlineKeyboardButton("Back", callback_data="adminCatalogFromMedia")
         )
+
+
 def changeMediaText(language):
     if language == "RU":
         return "Выберите вложение"
     if language == "EN":
         return "Choose attachment"
+
+
 def changeMediaMenu(language, idProduct):
     if language == "RU":
         return types.InlineKeyboardMarkup(row_width=1).add(
@@ -1829,27 +1932,35 @@ def changeMediaMenu(language, idProduct):
             types.InlineKeyboardButton("Video", callback_data=f"changeMediaToVideo#{idProduct}"),
             types.InlineKeyboardButton("Back", callback_data=f"resetChanging#{idProduct}")
         )
+
+
 def delProductText(language):
     if language == "RU":
         return "Товар удален из магазина"
     if language == "EN":
         return "Item was deleted from shop"
 
+
 def adminAddProductName(language):
     if language == "RU":
         return 'Введите название товара\n(Кратко, чтобы вместилось в кнопку)'
     if language == "EN":
         return 'Enter product name\n(Short to fit in button)'
+
+
 def adminAddProductNameMenu(language):
     if language == "RU":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Сбросить", callback_data="resetProduct"))
     if language == "EN":
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Reset", callback_data="resetProduct"))
+
+
 def adminAddProductTextRU(language):
     if language == "RU":
         return 'Введите описание товара на русском (не более 900 символов):'
     if language == "EN":
         return 'Enter product description in Russian (no more than 900 characters)'
+
 
 def adminAddProductTextEN(language):
     if language == "RU":
@@ -1857,15 +1968,18 @@ def adminAddProductTextEN(language):
     if language == "EN":
         return 'Enter product description in English (no more than 900 characters)'
 
+
 def adminAddProductPrice(language):
     if language == "RU":
         return 'Введите цену за 1 грамм в валюте BATH:'
     if language == "EN":
         return 'Enter the price for 1 gram in BATH currency'
+
+
 def adminAddProductMediaText(product, language):
     if language == "RU":
         return f'''ВЗГЛЯДОМ RU ПОЛЬЗОВАТЕЛЯ:\n
-        
+
 {product.name}
 
 {product.infoAbout.split('#')[0]}
@@ -1885,7 +1999,7 @@ Delivery on the whole Island
 '''
     if language == "EN":
         return f'''RU USER'S VIEW:\n
-        
+
 {product.name}
 
 {product.infoAbout.split('#')[0]}
@@ -1922,6 +2036,8 @@ def adminAddProductMediaMenu(language):
             # types.InlineKeyboardButton("Media group", callback_data=f"attachMediaGroupToProduct"),
             types.InlineKeyboardButton("Reset", callback_data="resetProduct")
         )
+
+
 def adminFinalProductMenu1(language):
     if language == "RU":
         return types.InlineKeyboardMarkup(row_width=1).add(
@@ -1937,6 +2053,8 @@ def adminFinalProductMenu1(language):
             types.InlineKeyboardButton("Add to end", callback_data="addProductInFinish"),
             types.InlineKeyboardButton("Reset", callback_data="resetProduct")
         )
+
+
 def adminFinalProductMenu2(language):
     if language == "RU":
         return types.InlineKeyboardMarkup(row_width=1).add(
@@ -1953,11 +2071,14 @@ def adminFinalProductMenu2(language):
             types.InlineKeyboardButton("Reset", callback_data="resetProduct")
         )
 
+
 def feedbackAdminNewPost(language):
     if language == "RU":
         return "Товар добавлен в магазин\nПользователи получили уведомления"
     if language == "EN":
         return "Item added to shop\nCustomers received notifications"
+
+
 def feedbackNewPost(language):
     if language == "RU":
         return "Загляни в магазин!\nТам кое что новенькое и интересное"
@@ -1967,16 +2088,20 @@ def feedbackNewPost(language):
 
 def adminChangeMenu(idProduct, language):
     if language == "RU":
-        return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Назад", callback_data=f"resetChanging#{idProduct}"))
+        return types.InlineKeyboardMarkup().add(
+            types.InlineKeyboardButton("Назад", callback_data=f"resetChanging#{idProduct}"))
     if language == "EN":
         return types.InlineKeyboardMarkup().add(
             types.InlineKeyboardButton("Back", callback_data=f"resetChanging#{idProduct}"))
+
 
 def adminSwitcherLanguageText(language):
     if language == "RU":
         return "Выберите язык"
     if language == "EN":
         return "Choose language"
+
+
 def adminSwitcherLanguageMenu():
     switchLanguageProfile = types.InlineKeyboardMarkup(row_width=1)
     languageProfileEN = types.InlineKeyboardButton("English", callback_data="adminToEnLanguage")
@@ -2032,6 +2157,7 @@ def warningOverflowCaption(language, lenght: int):
     if language == "EN":
         return f'The maximum number of characters is 1024\nWith this description, the product will have {lenght}'
 
+
 # def warningOverflowCaptionMenu(language, idProduct):
 #     if language == "RU":
 #         return types.InlineKeyboardMarkup(row_width=1).add(
@@ -2055,6 +2181,7 @@ def warningOverflowCaptionMenuRU(language, idProduct):
             types.InlineKeyboardButton("Try again", callback_data=f"adminChangeInfoAboutRU#{idProduct}"),
             types.InlineKeyboardButton("Back", callback_data=f"resetChanging#{idProduct}")
         )
+
 
 def warningOverflowCaptionMenuEN(language, idProduct):
     if language == "RU":
@@ -2093,6 +2220,7 @@ def warningOverflowCaptionForProductMenu1(language):
             types.InlineKeyboardButton("Reset", callback_data=f"resetProduct")
         )
 
+
 def warningOverflowCaptionForProductMenu2(language):
     if language == "RU":
         return types.InlineKeyboardMarkup(row_width=1).add(
@@ -2105,11 +2233,14 @@ def warningOverflowCaptionForProductMenu2(language):
             types.InlineKeyboardButton("Reset", callback_data=f"resetProduct")
         )
 
+
 def wrongDigitPriceText(language):
     if language == "RU":
         return 'Цена должна быть числом! (до 12345678)'
     if language == "EN":
         return 'Price must be a number! (up to 12345678)'
+
+
 def wrongDigitPriceMenu(language):
     if language == "RU":
         return types.InlineKeyboardMarkup(row_width=1).add(
@@ -2122,11 +2253,13 @@ def wrongDigitPriceMenu(language):
             types.InlineKeyboardButton("Reset", callback_data=f"resetProduct")
         )
 
+
 def errorAddressText(language):
     if language == "RU":
         return 'Ошибка поиска адреса\nПопробуйте снова или воспользуйтесь другим способом указания адреса'
     if language == "EN":
         return 'Error for search the address\nTry again or use another method of pointing address'
+
 
 def exitAdminText(language):
     if language == "RU":
@@ -2134,11 +2267,13 @@ def exitAdminText(language):
     if language == "EN":
         return 'You are customer now'
 
+
 def enterEstimatedDeliveryTimeText(language):
     if language == "RU":
         return 'Введите ориентировочное время доставки\nНапример 19:00 или 16:00-17:30'
     if language == "EN":
         return "Enter estimated delivery time\nFor example 19:00 or 16:00-17:30"
+
 
 def enterEstimatedDeliveryTimeMenu(language, idOrder):
     if language == "RU":

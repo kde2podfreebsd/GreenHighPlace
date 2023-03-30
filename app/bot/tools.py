@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 
 config = load_dotenv()
 API_KEY = os.getenv("YandexGeoToken")
-
 def get_address(lat, lon, language):
     try:
         lang = ""
