@@ -1,4 +1,4 @@
-# GreenHighPlace | Phuket Telegram bot shop for GreenHighPlace
+# GreenHighPlace | Telegram bot shop for GreenHighPlace (Thailand Phuket)
 
 ## Check Telegram Bot - https://t.me/GreenHighPlaceBot
 
